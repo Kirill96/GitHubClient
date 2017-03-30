@@ -15,9 +15,6 @@ class LoadDataForGitHubUsers {
     static let sharedInstance = LoadDataForGitHubUsers()
     
     private init() {}
-    let headers: HTTPHeaders = [
-        "Authorization": "token 0935acfbd8dc12d648f1e2c43d8f165100c77769",
-        ]
     
     var githubUsersInformation = [GitHubUser]()
     var arrayOfUsersLogin = [String]()
@@ -29,9 +26,19 @@ class LoadDataForGitHubUsers {
     var arrayOfSearchUsersLogin = [String]()
     var firstNumberForPaginationSearch = 0
     var secondNumberForPaginationSearch = 30
+    var login = ""
+    var password = ""
     
     func getUsersLoginSinceLastUserID(lastId: Int, completionHandler: @escaping () -> Void) {
         
+        let plainString = "\(login):\(password)" as NSString
+        let plainData = plainString.data(using: String.Encoding.utf8.rawValue)
+        let base64String = plainData?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Basic " + base64String!,
+            "Accept": "application/json"
+        ]
         
         Alamofire.request("https://api.github.com/users?since=\(lastId)", headers: headers).responseJSON { response in
             switch response.result {
@@ -47,6 +54,15 @@ class LoadDataForGitHubUsers {
     
     func getUserInformationWithLogin(search: Bool, userLogin: String, completionHandler: @escaping () -> Void) {
         
+        let plainString = "\(login):\(password)" as NSString
+        let plainData = plainString.data(using: String.Encoding.utf8.rawValue)
+        let base64String = plainData?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Basic " + base64String!,
+            "Accept": "application/json"
+        ]
+        
         Alamofire.request("https://api.github.com/users/\(userLogin)", headers: headers).responseJSON { response in
             switch response.result {
             case .success(let value):
@@ -60,6 +76,16 @@ class LoadDataForGitHubUsers {
     }
     
     func getUsersFromSearch(searchUser: String, completionHandler: @escaping () -> Void, completionHandler1: @escaping () -> Void) {
+        
+        
+        let plainString = "\(login):\(password)" as NSString
+        let plainData = plainString.data(using: String.Encoding.utf8.rawValue)
+        let base64String = plainData?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Basic " + base64String!,
+            "Accept": "application/json"
+        ]
         
         Alamofire.request("https://api.github.com/search/users?q=\(searchUser)", headers: headers).responseJSON { response in
             switch response.result {

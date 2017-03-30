@@ -58,6 +58,8 @@ class AccountAuthorization: UIViewController {
                     self.myActivityIndicator.stopAnimating()
                     
                 } else {
+                    self.loadDataForGitHubUsers.login = self.login.text!
+                    self.loadDataForGitHubUsers.password = self.password.text!
                     self.loadDataForUserProfile.userInformationForProfile.removeAll()
                     self.present(self.animate_swipe(idefiner: "TabBarController", presentationStyle:
                         0, transitionStyle: 1), animated:true, completion:nil)
